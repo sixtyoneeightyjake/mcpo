@@ -81,10 +81,7 @@ if [ ! -f "config.json" ]; then
     },
     "tavily": {
       "command": "npx",
-      "args": ["-y", "tavily-mcp@0.1.3"],
-      "env": {
-        "TAVILY_API_KEY": "your-tavily-api-key-here"
-      }
+      "args": ["-y", "tavily-mcp@0.1.3"]
     },
     "sequential-thinking": {
       "command": "npx",
@@ -93,18 +90,18 @@ if [ ! -f "config.json" ]; then
   }
 }
 EOF
-    print_warning "Please update config.json with your actual Tavily API key before proceeding."
-    echo -n "Press Enter to continue after updating config.json..."
-    read
+    print_success "Created config.json template."
 fi
 
-# Check if Tavily API key is still placeholder
-if grep -q "your-tavily-api-key-here" config.json; then
-    print_warning "It looks like you haven't updated the Tavily API key in config.json"
+# Check if TAVILY_API_KEY environment variable is set
+if [ -z "$TAVILY_API_KEY" ]; then
+    print_warning "TAVILY_API_KEY environment variable is not set."
+    echo "The Tavily API key will need to be provided when running the container."
+    echo "You can set it with: export TAVILY_API_KEY='your-actual-api-key'"
     echo -n "Continue anyway? (y/N): "
     read CONTINUE
     if [[ ! "$CONTINUE" =~ ^[Yy]$ ]]; then
-        print_error "Please update your Tavily API key in config.json and try again."
+        print_error "Please set the TAVILY_API_KEY environment variable and try again."
         exit 1
     fi
 fi

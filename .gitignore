@@ -10,7 +10,7 @@ wheels/
 .venv
 
 # Configuration files with secrets
-config.json
+
 docker-compose.override.yml
 
 # Environment files

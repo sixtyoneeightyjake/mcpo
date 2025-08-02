@@ -10,9 +10,19 @@ This guide explains how to build, push, and deploy your MCPO project with Contex
 
 ## Step 1: Prepare Your Environment
 
-### 1.1 Update your config.json with your Tavily API Key
+### 1.1 Set your Tavily API Key as Environment Variable
 
-Ensure your `config.json` has your actual Tavily API key:
+Set your Tavily API key as an environment variable instead of hardcoding it in config.json:
+
+```bash
+# Set the environment variable
+export TAVILY_API_KEY="your-actual-tavily-api-key-here"
+
+# Verify it's set
+echo $TAVILY_API_KEY
+```
+
+Your `config.json` should look like this (no API key needed):
 
 ```json
 {
@@ -23,10 +33,7 @@ Ensure your `config.json` has your actual Tavily API key:
     },
     "tavily": {
       "command": "npx",
-      "args": ["-y", "tavily-mcp@0.1.3"],
-      "env": {
-        "TAVILY_API_KEY": "your-actual-tavily-api-key-here"
-      }
+      "args": ["-y", "tavily-mcp@0.1.3"]
     },
     "sequential-thinking": {
       "command": "npx",
@@ -35,6 +42,8 @@ Ensure your `config.json` has your actual Tavily API key:
   }
 }
 ```
+
+**Note:** The MCPO application will automatically use the `TAVILY_API_KEY` environment variable for the Tavily server.
 
 ### 1.2 Login to DockerHub
 

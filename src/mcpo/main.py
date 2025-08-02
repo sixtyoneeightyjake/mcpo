@@ -122,7 +122,25 @@ def create_sub_app(server_name: str, server_cfg: Dict[str, Any], cors_allow_orig
         sub_app.state.server_type = "stdio"
         sub_app.state.command = server_cfg["command"]
         sub_app.state.args = server_cfg.get("args", [])
-        sub_app.state.env = {**os.environ, **server_cfg.get("env", {})}
+        
+        # Start with OS environment variables
+        env_vars = dict(os.environ)
+        
+        # For tavily server, automatically use TAVILY_API_KEY from environment if not specified in config
+        if server_name.lower() == "tavily":
+            config_env = server_cfg.get("env", {})
+            if "TAVILY_API_KEY" not in config_env and "TAVILY_API_KEY" in os.environ:
+                logger.info(f"Using TAVILY_API_KEY from environment variable for {server_name} server")
+                config_env = {**config_env, "TAVILY_API_KEY": os.environ["TAVILY_API_KEY"]}
+            elif "TAVILY_API_KEY" in config_env:
+                logger.info(f"Using TAVILY_API_KEY from config.json for {server_name} server")
+            # Merge config env vars (which may now include TAVILY_API_KEY from environment)
+            env_vars.update(config_env)
+        else:
+            # For other servers, just merge config env vars as before
+            env_vars.update(server_cfg.get("env", {}))
+        
+        sub_app.state.env = env_vars
 
     server_config_type = server_cfg.get("type")
     if server_config_type == "sse" and server_cfg.get("url"):
