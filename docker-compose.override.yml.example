@@ -1,0 +1,57 @@
+# docker-compose.override.yml.example
+# Copy this file to docker-compose.override.yml and update with your actual values
+# This file should NOT be committed to version control
+
+version: '3.8'
+
+services:
+  mcpo:
+    # Override the image with your actual DockerHub username
+    image: yourusername/mcpo:latest
+    
+    environment:
+      # Replace with your actual Tavily API key
+      - TAVILY_API_KEY=tvly-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      
+      # Optional: Add other environment variables
+      # - NODE_ENV=production
+      # - LOG_LEVEL=info
+    
+    # Optional: Override ports if needed
+    # ports:
+    #   - "8080:8000"
+    
+    # Optional: Add volume mounts for custom configs
+    # volumes:
+    #   - ./custom-config.json:/app/config.json:ro
+    #   - ./logs:/app/logs
+    
+    # Optional: Add labels for monitoring/management
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mcpo.rule=Host(`your-domain.com`)"
+      - "traefik.http.services.mcpo.loadbalancer.server.port=8000"
+      
+# Optional: Add additional services for production
+# services:
+#   redis:
+#     image: redis:alpine
+#     container_name: mcpo-redis
+#     restart: unless-stopped
+#     volumes:
+#       - redis-data:/data
+#   
+#   postgres:
+#     image: postgres:15-alpine
+#     container_name: mcpo-postgres
+#     restart: unless-stopped
+#     environment:
+#       - POSTGRES_DB=mcpo
+#       - POSTGRES_USER=mcpo
+#       - POSTGRES_PASSWORD=your-secure-password
+#     volumes:
+#       - postgres-data:/var/lib/postgresql/data
+
+# volumes:
+#   redis-data:
+#   postgres-data:

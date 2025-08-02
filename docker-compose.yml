@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  mcpo:
+    # Replace 'yourusername' with your actual DockerHub username
+    image: yourusername/mcpo:latest
+    container_name: mcpo-server
+    ports:
+      - "8000:8000"
+    command: ["--config", "/app/config.json", "--port", "8000"]
+    restart: unless-stopped
+    environment:
+      # Set your actual Tavily API key here or use docker-compose.override.yml
+      - TAVILY_API_KEY=your-actual-tavily-api-key-here
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/docs || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    # Optional: Mount custom config from host
+    # volumes:
+    #   - ./config.json:/app/config.json:ro
+    
+    # Optional: Resource limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Optional: Add a reverse proxy (uncomment if needed)
+  # nginx:
+  #   image: nginx:alpine
+  #   container_name: mcpo-nginx
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
+  #     - ./ssl:/etc/nginx/ssl:ro
+  #   depends_on:
+  #     - mcpo
+  #   restart: unless-stopped
+
+# Optional: Create a custom network
+# networks:
+#   mcpo-network:
+#     driver: bridge

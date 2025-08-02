@@ -8,4 +8,27 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Configuration files with secrets
 config.json
+docker-compose.override.yml
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Docker artifacts
+.dockerignore.local
+
+# Deployment logs
+deploy.log
+
+# SSL certificates
+*.pem
+*.key
+*.crt
+
+# Backup files
+*.bak
+*.backup
